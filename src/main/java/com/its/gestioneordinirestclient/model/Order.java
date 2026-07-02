@@ -3,10 +3,11 @@ package com.its.gestioneordinirestclient.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.envers.AuditOverride;
+import org.hibernate.envers.Audited;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -16,7 +17,9 @@ import java.util.UUID;
 @Entity
 @Builder
 @Table(name = "orders")
-public class Order {
+@Audited
+@AuditOverride(forClass = Auditable.class)
+public class Order extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
