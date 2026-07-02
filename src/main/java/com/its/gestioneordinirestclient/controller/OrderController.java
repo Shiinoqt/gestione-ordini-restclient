@@ -88,8 +88,9 @@ public class OrderController {
             @PathVariable UUID id,
             @RequestHeader(value = "Auth-Email", required = false) String email,
             @RequestHeader(value = "Auth-Roles", required = false) String rolesHeader,
+            @RequestHeader(value = "Auth-User-Id", required = false) String userId,
             @RequestPart("file") MultipartFile file) {
-        return ResponseEntity.ok(orderService.payCheck(id, email, rolesHeader, file));
+        return ResponseEntity.ok(orderService.payCheck(id, email, rolesHeader, userId, file));
     }
 
     /**

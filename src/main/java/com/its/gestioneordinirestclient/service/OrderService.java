@@ -193,10 +193,14 @@ public class OrderService {
         return orderMapper.toResponseDTO(order);
     }
 
-    public OrderResponseDTO payCheck(UUID id, String email, String rolesHeader, MultipartFile file) {
+    public OrderResponseDTO payCheck(UUID id, String email, String rolesHeader, String userId,MultipartFile file) {
         String safeEmail = requireEmail(email);
         Order order = loadAllowedOrder(id, safeEmail, rolesHeader);
         ensurePayable(order);
+
+        if (userId.isBlank()) {
+            throw new BadRequestException("Missing user id");
+        }
 
         if (file == null || file.isEmpty()) {
             throw new BadRequestException("Check file is required");
@@ -224,6 +228,7 @@ public class OrderService {
 
             PaymentResponse paymentResponse = paymentRestClient.post()
                     .uri("/payments/process-with-check")
+                    .header("caller", userId.trim())
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(multipartBody)
                     .retrieve()
